@@ -26,10 +26,6 @@ describe("EthPool", () => {
     it("current period is 0", async function () {
       expect(await ethPool.currentWeek()).to.equal(0)
     })
-
-    it("current period is 0", async function () {
-      expect(await ethPool.currentWeek()).to.equal(0)
-    })
   })
 
   describe("Deposits", () => {
