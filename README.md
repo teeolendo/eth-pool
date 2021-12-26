@@ -21,8 +21,8 @@ Example:
 > **A** should get their deposit + all the rewards.
 > **B** should only get their deposit because rewards were sent to the pool before they participated.
 
-## Implementation
-### Deposits
+# Implementation
+## Deposits
 Function: deposits(): O(1)
 Deposits are received and affects the following state variables:
 - mapping: deposits - stores an address' total deposits currently held in the contract
@@ -31,14 +31,14 @@ Deposits are received and affects the following state variables:
 - mapping: totalDepositsPerWeek - current weeks maps to unique deposits for the week
 - event: DepositReceived
 
-### Rewards
+## Rewards
 Function: rewards(): O(1)
 Allowlisted members can add rewards to a given week.
 State updates:
 - mapping: totalRewardsPerWeek - total Rewards for a given week
 - uint: currentWeek - if an allowlisted address passes a true value to move week, the current week is incremented.
 
-### Withdraw:
+## Withdraw:
 Function: withdraw(): O(n) with n representing the maxNoOfUniqueWeeks.
 - mapping: deposits - update this value when an address withdraw their deposits.
 - mapping: uniqueWeeklyDeposits - removes every unique week when rewards are calculated.
