@@ -103,6 +103,7 @@ describe("EthPool", () => {
       const currentWeek = await ethPool.connect(owner).currentWeek()
       expect(currentWeek).to.equal(expectedWeek)
     })
+    
   })
 
   describe("Withdrawal", () => {
@@ -127,12 +128,13 @@ describe("EthPool", () => {
       const deposit1 = ethers.utils.parseEther((100).toString())
       const deposit2 = ethers.utils.parseEther((300).toString())
       const depositor1TotalFunds = ethers.utils.parseEther((150).toString())
+      const expectedWeek = 0;
 
       await ethPool.connect(depositor1).deposit({value: deposit1})
       await ethPool.connect(depositor2).deposit({value: deposit2})
       await ethPool.connect(owner).reward(false, {value: reward})
       const trx = ethPool.connect(depositor1).withdraw(depositor1.address)
-      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor1.address, depositor1TotalFunds)
+      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor1.address, depositor1TotalFunds, expectedWeek)
     })
 
     it("withdraws rewards ratio: 100% pool", async function () {
@@ -140,12 +142,13 @@ describe("EthPool", () => {
       const deposit1 = ethers.utils.parseEther((100).toString())
       const deposit2 = ethers.utils.parseEther((300).toString())
       const depositor1TotalFunds = ethers.utils.parseEther((250).toString())
+      const expectedWeek = 1;
 
       await ethPool.connect(depositor1).deposit({value: deposit1})
       await ethPool.connect(owner).reward(true, {value: reward})
       await ethPool.connect(depositor2).deposit({value: deposit2})
       const trx = ethPool.connect(depositor1).withdraw(depositor1.address)
-      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor1.address, depositor1TotalFunds)
+      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor1.address, depositor1TotalFunds, expectedWeek)
     })
 
     it("withdraws rewards ratio: 12.5%/37.5%/50% pool", async function () {
@@ -154,13 +157,14 @@ describe("EthPool", () => {
       const deposit2 = ethers.utils.parseEther((300).toString())
       const deposit3 = ethers.utils.parseEther((400).toString())
       const depositor2TotalFunds = ethers.utils.parseEther((450).toString())
+      const expectedWeek = 0;
 
       await ethPool.connect(depositor1).deposit({value: deposit1})
       await ethPool.connect(depositor2).deposit({value: deposit2})
       await ethPool.connect(depositor3).deposit({value: deposit3})
       await ethPool.connect(owner).reward(false, {value: reward})
       const trx = ethPool.connect(depositor2).withdraw(depositor2.address)
-      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor2.address, depositor2TotalFunds)
+      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor2.address, depositor2TotalFunds, expectedWeek)
     })
 
     it("withdraws low precision", async function () {
@@ -169,13 +173,14 @@ describe("EthPool", () => {
       const deposit2 = (237).toString()
       const deposit3 = (122).toString()
       const depositor2TotalFunds = (525).toString()
+      const expectedWeek = 0;
 
       await ethPool.connect(depositor1).deposit({value: deposit1})
       await ethPool.connect(depositor2).deposit({value: deposit2})
       await ethPool.connect(depositor3).deposit({value: deposit3})
       await ethPool.connect(owner).reward(false, {value: reward})
       const trx = ethPool.connect(depositor2).withdraw(depositor2.address)
-      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor2.address, depositor2TotalFunds)
+      await expect(trx).to.emit(ethPool, "FundsWithdrawn").withArgs(depositor2.address, depositor2TotalFunds, expectedWeek)
     })
   })
 })

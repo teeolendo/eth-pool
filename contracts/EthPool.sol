@@ -4,11 +4,12 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /// @title Rewards contracts that accepts deposits and distributes rewards weekly
 /// @author Tony Olendo
 /// @notice Accepts ether and distributes rewards to members
-contract EthPool is Ownable {
+contract EthPool is Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   using EnumerableSet for EnumerableSet.UintSet;
 
@@ -38,9 +39,9 @@ contract EthPool is Ownable {
   mapping(address => bool) private _allowList;
   mapping(address => UserDeposits) uniqueWeeklyDeposits;
 
-  event DepositReceived(address indexed depositor, uint amount);
+  event DepositReceived(address indexed depositor, uint amount, uint currentWeek);
   event RewardsReceived(address indexed rewarder, uint amount);
-  event FundsWithdrawn(address indexed rewarder, uint amount);
+  event FundsWithdrawn(address indexed rewarder, uint amount, uint currentWeek);
   event WeekAdvanced(uint newWeek);
   event UniqueMaxUpdated(uint16 newMax);
 
@@ -106,7 +107,7 @@ contract EthPool is Ownable {
     deposits[msg.sender] = totalDeposits.add(msg.value);
     totalDepositsPerWeek[currentWeek] = _totalDepositsThisWeek.add(msg.value);
     
-    emit DepositReceived(msg.sender, msg.value);
+    emit DepositReceived(msg.sender, msg.value, currentWeek);
   }
 
   /// @notice Deposits rewards into a pool. 
@@ -122,7 +123,7 @@ contract EthPool is Ownable {
     emit RewardsReceived(msg.sender, msg.value);
   }
 
-  function withdraw(address payable to) external payable {
+  function withdraw(address payable to) external payable nonReentrant {
     require(deposits[msg.sender] > 0, "EP:: NO_FUNDS_DEPOSITED");
     
     uint totalEligibleRewards;
@@ -152,7 +153,12 @@ contract EthPool is Ownable {
     uint withdrawAmount = totalEligibleRewards + totalUserDeposits;
     (bool sent,) = to.call{value: withdrawAmount}("");
     require(sent, "EP:: ETHER_NOT_SENT");
-    emit FundsWithdrawn(msg.sender, withdrawAmount);
+    emit FundsWithdrawn(msg.sender, withdrawAmount, currentWeek);
+  }
+
+  function updateMaxNoOfUniqueDeposits(uint16 newMax) external onlyOwner {
+    maxNoOfUniqueWeeks = newMax;
+    emit UniqueMaxUpdated(newMax);
   }
 
   function _advanceWeek() internal {
