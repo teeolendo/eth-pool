@@ -21,6 +21,8 @@ Example:
 > **A** should get their deposit + all the rewards.
 > **B** should only get their deposit because rewards were sent to the pool before they participated.
 
+## View on Etherscan
+https://rinkeby.etherscan.io/address/0x467ef7aF232d2Ec73BdeA6EAC45751D4c3C7530a
 
 ## Setup
 

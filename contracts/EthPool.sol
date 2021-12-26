@@ -12,7 +12,7 @@ contract EthPool is Ownable {
   using SafeMath for uint256;
   using EnumerableSet for EnumerableSet.UintSet;
 
-  /** 
+  /** a
     @dev Struct that implements the OZ Enumerable set.
     This ensures all create, read, update operations are O(1).
     Iterating through the array is O(n).
