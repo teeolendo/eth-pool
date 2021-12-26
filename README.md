@@ -21,6 +21,30 @@ Example:
 > **A** should get their deposit + all the rewards.
 > **B** should only get their deposit because rewards were sent to the pool before they participated.
 
+# Implementation
+## Deposits
+Function: deposits(): O(1)
+Deposits are received and affects the following state variables:
+- mapping: deposits - stores an address' total deposits currently held in the contract
+- mapping: depositsPerWeek - currentWeek -> address -> amount deposited this week
+- mapping: uniqueWeeklyDeposits - address mapping to an OZ Enumerable Set which tracks a depositor unique weekly deposits. If a user updates their deposits in the same week, the update of the set is idempotent and is still O(1).
+- mapping: totalDepositsPerWeek - current weeks maps to unique deposits for the week
+- event: DepositReceived
+
+## Rewards
+Function: rewards(): O(1)
+Allowlisted members can add rewards to a given week.
+State updates:
+- mapping: totalRewardsPerWeek - total Rewards for a given week
+- uint: currentWeek - if an allowlisted address passes a true value to move week, the current week is incremented.
+
+## Withdraw:
+Function: withdraw(): O(n) with n representing the maxNoOfUniqueWeeks.
+- mapping: deposits - update this value when an address withdraw their deposits.
+- mapping: uniqueWeeklyDeposits - removes every unique week when rewards are calculated.
+- mapping: depositsPerWeek - sets 0 for every week an address deposits funds.
+
+
 ## View on Etherscan
 https://rinkeby.etherscan.io/address/0x946Bd04cEF5C20bf072241265c590510A79805AE
 
