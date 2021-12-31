@@ -47,8 +47,13 @@ Function: withdraw(): O(n) with n representing the maxNoOfUniqueWeeks.
 
 ## View on Etherscan
 https://rinkeby.etherscan.io/address/0x946Bd04cEF5C20bf072241265c590510A79805AE
-
 ~~https://rinkeby.etherscan.io/address/0x467ef7aF232d2Ec73BdeA6EAC45751D4c3C7530a~~
+
+## View Subgraph
+https://testnet.thegraph.com/subgraph?id=0x7f4a86478cdd09aae270bf3800e06e67db50c76d-0&view=Overview
+https://github.com/teeolendo/eth-pool-subgraph
+https://thegraph.com/studio/subgraph/olendo-ethpool/
+
 
 ## Setup
 

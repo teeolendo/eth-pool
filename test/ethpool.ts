@@ -108,7 +108,7 @@ describe("EthPool", () => {
 
   describe("Withdrawal", () => {
     it("reverts if no deposits have been received", async function () {
-      const trx = ethPool.connect(depositor1).withdraw(depositor1.address);
+      const trx = ethPool.connect(depositor1).withdraw(depositor1.address)
       await expect(trx).to.be.revertedWith("EP:: NO_FUNDS_DEPOSITED")
     })
 
